@@ -40,7 +40,7 @@ public partial class Result : System.Web.UI.Page
 
                     handleExist = TwitterSharedLib.IsTwitterHandleExist(TwitterTokenKey);
 
-                    if (handleExist == true)
+                    if (handleExist == false)
                     {
 
                         var service = new TwitterService(twitterconsumerKey, twxitterCosnumerSecret);
@@ -78,8 +78,16 @@ public partial class Result : System.Web.UI.Page
                     else
                     {
                         TwitterSessionState twitterSession = TwitterSharedLib.GetTwitterHandle(TwitterTokenKey);
-                        SetTweetImages(twitterSession.ProfileImageUrl, twitterSession.RetweetedStatusInformation);
-
+                        if (twitterSession != null)
+                        {
+                            SetTweetImages(twitterSession.ProfileImageUrl, twitterSession.RetweetedStatusInformation);
+                        }
+                        else
+                        {
+                            Response.Write("<script>alert('Error Occured Try again');</script>");
+                            Session["TweetURL"] = null;
+                            Response.Redirect("Default.aspx");
+                        }
                     }
                 }
                 else
