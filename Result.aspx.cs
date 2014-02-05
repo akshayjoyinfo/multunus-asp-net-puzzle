@@ -12,6 +12,7 @@ public partial class Result : System.Web.UI.Page
     public static int NUMBER_OF_RETWEETS=10; // If the Count is 10, then TweetSharp will retrive the top 9 retweets through the API
     public static string CHILD_CIRLCE_IMGID = "img";
     public static string CHILD_CIRLCE_DIVID = "childcircle";
+    public static string TWITTER_TOKEN_SEPERATOR = "@#$%^&*";
     protected void Page_Load(object sender, EventArgs e)
     {                
         try
@@ -21,10 +22,9 @@ public partial class Result : System.Web.UI.Page
             string twxitterCosnumerSecret = "TFaCy4fUUSbparCOF8o1jpFRwzXoQ49Zt9xeaUyBAMQ";
             string twitterAccessToken = "1872531062-9YB2m6RP5AnvwOjrklec6yBzVGNRLabHs5Gq8yc";
             string twitterAccessTokenSecret = "KI4NSeY9gwNlCX49AiyyOTqZxHfM1zpXmZFsnJQVIFUwg";
-
-            var service = new TwitterService(twitterconsumerKey, twxitterCosnumerSecret);
-            service.AuthenticateWith(twitterAccessToken, twitterAccessTokenSecret);
-
+            string TwitterTokenKey = string.Empty;
+            bool handleExist = false;
+            
             if (Session["TweetURL"] != null)
             {
 
@@ -36,52 +36,50 @@ public partial class Result : System.Web.UI.Page
 
                 if (URLContents.Length >= 6)
                 {
+                    TwitterTokenKey = tweetedUser + TWITTER_TOKEN_SEPERATOR + status;
 
-                    RetweetsOptions tweetOptions = new RetweetsOptions();
-                    tweetOptions.Id = status;
-                    tweetOptions.Count = NUMBER_OF_RETWEETS;
+                    handleExist = TwitterSharedLib.IsTwitterHandleExist(TwitterTokenKey);
 
-                    //Twitteru
-                    GetTweetOptions tweetUser = new GetTweetOptions();
-                    //tweetUser.IncludeEntities=true;
-                    tweetUser.Id = status;
-
-                    TwitterStatus tweetOwner = service.GetTweet(tweetUser);
-                    string MainCircleURL = tweetOwner.Author.ProfileImageUrl.Replace("_normal", "");
-
-                    List<TwitterStatus> tweets = (List<TwitterStatus>)service.Retweets(tweetOptions);
-
-                    if (tweets != null)
+                    if (handleExist == true)
                     {
 
-                        List<TwitterStatus> Sortedtweets = (List<TwitterStatus>)tweets.OrderByDescending(tw => tw.User.FollowersCount).ToList();
+                        var service = new TwitterService(twitterconsumerKey, twxitterCosnumerSecret);
+                        service.AuthenticateWith(twitterAccessToken, twitterAccessTokenSecret);
 
-                        // Main Circel Images
+                        RetweetsOptions tweetOptions = new RetweetsOptions();
+                        tweetOptions.Id = status;
+                        tweetOptions.Count = NUMBER_OF_RETWEETS;
 
-                        HtmlImage mainCirleHandle = (HtmlImage)this.FindControl("MainCircle");
-                        mainCirleHandle.Attributes["src"] = MainCircleURL;
+                        //Twitteru
+                        GetTweetOptions tweetUser = new GetTweetOptions();
+                        //tweetUser.IncludeEntities=true;
+                        tweetUser.Id = status;
 
-                        // Child Circle Tweets Profile Images
-                        int startCount = 1;
-                        foreach (TwitterStatus twt in Sortedtweets)
+                        TwitterStatus tweetOwner = service.GetTweet(tweetUser);
+                        string MainCircleURL = tweetOwner.Author.ProfileImageUrl.Replace("_normal", "");
+
+                        List<TwitterStatus> tweets = (List<TwitterStatus>)service.Retweets(tweetOptions);
+
+                        if (tweets != null)
                         {
 
-                            HtmlImage childCircleHandle = (HtmlImage)this.FindControl(CHILD_CIRLCE_IMGID + startCount);
-                            if (childCircleHandle != null)
-                            {
-                                childCircleHandle.Attributes["src"] = twt.User.ProfileImageUrl.Replace("_normal", "");
-                                // childCircleHandle.Attributes["child-circle-"+startCount] = startCount.ToString();
+                            List<TwitterStatus> Sortedtweets = (List<TwitterStatus>)tweets.OrderByDescending(tw => tw.User.FollowersCount).ToList();
 
-                                HtmlControl childCircleDivHandle = (HtmlControl)this.FindControl(CHILD_CIRLCE_DIVID + startCount);
-                                childCircleDivHandle.Attributes["title"] = startCount.ToString();
-                                startCount++;
-                            }
+                            SetTweetImages(MainCircleURL, Sortedtweets);
+                           
+                            bool success = TwitterSharedLib.StoreTwitterHandle(MainCircleURL, Sortedtweets, TwitterTokenKey, DateTime.Now);
+
+                        }
+                        else
+                        {
+                            Response.Write("<script>alert('Failled to get Tweitter Handle, Please try again later');</script>");
                         }
                     }
                     else
                     {
-                        Response.Write("<script>alert('Failled to get Tweitter Handle, Please try again later');</script>");
-                        
+                        TwitterSessionState twitterSession = TwitterSharedLib.GetTwitterHandle(TwitterTokenKey);
+                        SetTweetImages(twitterSession.ProfileImageUrl, twitterSession.RetweetedStatusInformation);
+
                     }
                 }
                 else
@@ -103,7 +101,37 @@ public partial class Result : System.Web.UI.Page
         }
     }
 
-   
+
+    protected void SetTweetImages(string mainCircleURL, List<TwitterStatus> sortedRetweets)
+    {
+        try
+        {
+            // Main Circel Images
+            HtmlImage mainCirleHandle = (HtmlImage)this.FindControl("MainCircle");
+            mainCirleHandle.Attributes["src"] = mainCircleURL;
+
+            // Child Circle Tweets Profile Images
+            int startCount = 1;
+            foreach (TwitterStatus twt in sortedRetweets)
+            {
+
+                HtmlImage childCircleHandle = (HtmlImage)this.FindControl(CHILD_CIRLCE_IMGID + startCount);
+                if (childCircleHandle != null)
+                {
+                    childCircleHandle.Attributes["src"] = twt.User.ProfileImageUrl.Replace("_normal", "");
+                    // childCircleHandle.Attributes["child-circle-"+startCount] = startCount.ToString();
+
+                    HtmlControl childCircleDivHandle = (HtmlControl)this.FindControl(CHILD_CIRLCE_DIVID + startCount);
+                    childCircleDivHandle.Attributes["title"] = startCount.ToString();
+                    startCount++;
+                }
+            }
+        }
+        catch (Exception exp)
+        {
+
+        }
+    }
 
     
     protected void BtnTryAnotherHandle_Click(object sender, EventArgs e)
