@@ -56,7 +56,7 @@ public static class TwitterSharedLib
             if (sessionDictionary != null && sessionDictionary.Count > 0)
             {
                 var value = from sessionValues in sessionDictionary.Values.Where(p => p.TokenURL == token) select sessionValues.TokenURL;
-                if (value.Count() > 0)
+                if (value.FirstOrDefault() != string.Empty)
                     isHandleExist = true;
                 else
                     isHandleExist = false;

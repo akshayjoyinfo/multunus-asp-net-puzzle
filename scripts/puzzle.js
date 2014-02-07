@@ -1,75 +1,116 @@
 $(document).ready(function () {
     try {
+        
         var windowWidth = $(window).width();
         var windowHeight = $(window).height();
 
-        var mainCircleX = windowWidth / 2 - 150 ;
+        var mainCircleX = windowWidth / 2 - 150;
         var mainCircleY = windowHeight / 2 - 150;
 
-        var centerX = mainCircleX + 100 ;
+        var centerX = mainCircleX + 100;
         var centerY = mainCircleY + 100;
 
-        // Main Circle Icon
-        $(".main-circle").css("left", mainCircleX+13);
-        $(".main-circle").css("top", mainCircleY+ 10);
+        var startPos = 1.5;
+        var tweetCount = $("#HidTweetCircleCount").val();
 
-        $("#childcircle1").css("left", centerX);
-        $("#childcircle1").css("top", centerY - 220);
+        $(".main-circle").css("left", mainCircleX + 13);
+        $(".main-circle").css("top", mainCircleY + 10);
+
+        if (tweetCount % 2 == 0) {
+
+            $("#childcircle1").css("left", centerX);
+            $("#childcircle1").css("top", centerY - 220);
+
+            var diaEndPos = (tweetCount / 2) + 1;
+
+            $("#childcircle" + diaEndPos).css("left", centerX);
+            $("#childcircle" + diaEndPos).css("top", centerY + 220);
+
+            var remianPos = tweetCount - 2;
+            var circlesPerHalfSection = remianPos / 2;
+            var circularDistance = 1 / (circlesPerHalfSection + 1);
+            circularDistance = circularDistance;
+        }
 
 
-        //p1 Point of Circle
+        else {
 
-        var p1X = centerX + Math.cos(1.72 * Math.PI) * 220;
-        var p1Y = centerY + Math.sin(1.71 * Math.PI) * 220
+            $("#childcircle1").css("left", centerX);
+            $("#childcircle1").css("top", centerY - 220);
+
+            var remianPos = tweetCount - 1;
+            var circlesPerHalfSection = remianPos / 2;
+            var circularDistance = 1 / (circlesPerHalfSection + 1);
+            circularDistance = circularDistance + 0.02;
+        }
+
+        // Right Half Cirlce
+        var CIRCULAR_DISTANCE = circularDistance;
+        var diifQuadrant = false;
+        for (var pos = 1; pos <= circlesPerHalfSection; ++pos) {
+
+            var divIDPos = parseInt(pos + 1);
+
+            if (startPos + circularDistance > 2.0) {
+
+                diifQuadrant = true;
+                startPos = startPos + circularDistance - 2;
+            }
 
 
-        $("#childcircle2").css("left", p1X);
-        $("#childcircle2").css("top", p1Y);
+            if (diifQuadrant == true) {
+                var pointX = centerX + Math.cos(parseFloat(startPos) * Math.PI) * 220;
+                var pointY = centerY + Math.sin(parseFloat(startPos) * Math.PI) * 220;
+                startPos = startPos + CIRCULAR_DISTANCE;
+
+            }
+            else {
+                var pointX = centerX + Math.cos(parseFloat(startPos + circularDistance) * Math.PI) * 220;
+                var pointY = centerY + Math.sin(parseFloat(startPos + circularDistance) * Math.PI) * 220;
+                circularDistance = circularDistance + CIRCULAR_DISTANCE;
+            }
+
+            $("#childcircle" + divIDPos).css("left", pointX);
+            $("#childcircle" + divIDPos).css("top", pointY);
 
 
-        var p2X = centerX + Math.cos(1.94 * Math.PI) * 220;
-        var p2Y = centerY + Math.sin(1.94 * Math.PI) * 220
+        }
 
-        $("#childcircle3").css("left", p2X);
-        $("#childcircle3").css("top", p2Y);
+        // Left Half Cirlce
+        circularDistance = CIRCULAR_DISTANCE;
+        startPos = 1.5;
+        diifQuadrant = false;
+        var diffQuadPos;
+        for (var pos = tweetCount; pos > tweetCount - circlesPerHalfSection; --pos) {
 
-        var p3X = centerX + Math.cos(0.16 * Math.PI) * 220;
-        var p3Y = centerY + Math.sin(0.16 * Math.PI) * 220
+            var divIDPos = parseInt(pos);
+            if (startPos - circularDistance < 1.0) {
 
-        $("#childcircle4").css("left", p3X);
-        $("#childcircle4").css("top", p3Y);
+                diifQuadrant = true;
+                diffQuadPos = startPos - circularDistance;
 
-        var p4X = centerX + Math.cos(0.38 * Math.PI) * 220;
-        var p4Y = centerY + Math.sin(0.38 * Math.PI) * 220
+            }
 
-        $("#childcircle5").css("left", p4X);
-        $("#childcircle5").css("top", p4Y);
+            if (diifQuadrant == true) {
+                var pointX = centerX + Math.cos(parseFloat(diffQuadPos) * Math.PI) * 220;
+                var pointY = centerY + Math.sin(parseFloat(diffQuadPos) * Math.PI) * 220;
+                circularDistance = circularDistance + CIRCULAR_DISTANCE;
 
-        var p5X = centerX + Math.cos(0.60 * Math.PI) * 220;
-        var p5Y = centerY + Math.sin(0.60 * Math.PI) * 220
+            }
+            else {
 
-        $("#childcircle6").css("left", p5X);
-        $("#childcircle6").css("top", p5Y);
+                var pointX = centerX + Math.cos(parseFloat(startPos - circularDistance) * Math.PI) * 220;
+                var pointY = centerY + Math.sin(parseFloat(startPos - circularDistance) * Math.PI) * 220;
+                circularDistance = circularDistance + CIRCULAR_DISTANCE;
+            }
+            $("#childcircle" + divIDPos).css("left", pointX);
+            $("#childcircle" + divIDPos).css("top", pointY);
 
-        var p6X = centerX + Math.cos(0.82 * Math.PI) * 220;
-        var p6Y = centerY + Math.sin(0.82 * Math.PI) * 220
 
-        $("#childcircle7").css("left", p6X);
-        $("#childcircle7").css("top", p6Y);
+        }
 
-        var p7X = centerX + Math.cos(1.04 * Math.PI) * 220;
-        var p7Y = centerY + Math.sin(1.04 * Math.PI) * 220
 
-        $("#childcircle8").css("left", p7X);
-        $("#childcircle8").css("top", p7Y);
-
-        var p8X = centerX + Math.cos(1.26 * Math.PI) * 220;
-        var p8Y = centerY + Math.sin(1.26 * Math.PI) * 220
-
-        $("#childcircle9").css("left", p8X);
-        $("#childcircle9").css("top", p8Y);
- 
     } catch (err) {
-       
+        alert(err);
     }
 });

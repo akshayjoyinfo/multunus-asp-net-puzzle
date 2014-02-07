@@ -21,37 +21,11 @@
 </form>
     <div id="main-Container" style="width:1024px;height:680px" >
         
-        <div class="main-circle">
-		  <img runat="server" id="MainCircle" src="images/Main.png">
-		</div>
-		<div id="childcircle1" runat="server" class="child-item tooltip" >
-			<img id="img1" runat="server" src="images/1.jpeg">
-		</div>
-		<div id="childcircle2" runat="server" class="child-item tooltip" >
-			<img id="img2" runat="server"  src="images/2.png">
-		</div>
-		<div id="childcircle3" runat="server" class="child-item tooltip" >
-			<img id="img3" runat="server" src="images/3.jpeg">
-		</div>
-		<div id="childcircle4" runat="server" class="child-item tooltip" >
-			<img id="img4" runat="server" src="images/4.jpeg">
-		</div>
-		<div id="childcircle5" runat="server" class="child-item tooltip" >
-			<img id="img5" runat="server" src="images/5.jpeg">
-		</div>
-		<div id="childcircle6" runat="server" class="child-item tooltip" >
-			<img id="img6" runat="server" src="images/6.jpeg">
-		</div>
-		<div id="childcircle7" runat="server" class="child-item tooltip">
-			<img id="img7" runat="server" src="images/7.jpg">
-		</div>
-		<div id="childcircle8" runat="server" class="child-item tooltip" >
-			<img id="img8" runat="server" src="images/8.jpeg">
-		</div>
-		<div id="childcircle9" runat="server" class="child-item tooltip">
-			<img id="img9" runat="server" src="images/9.png">
-		</div>
+        <asp:Panel runat="server" ID="TwitterCirclePanel" Width="500" Height="400" >
+
+        </asp:Panel>
 
     </div>
+    <input type="text" name="HidTweetCircleCount" id="HidTweetCircleCount" runat="server" style="display:none" />
 </body>
 </html>

@@ -62,8 +62,19 @@ public partial class Result : System.Web.UI.Page
 
                         if (tweets != null)
                         {
+                            int tweetCount = 9;
 
-                            List<TwitterStatus> Sortedtweets = (List<TwitterStatus>)tweets.OrderByDescending(tw => tw.User.FollowersCount).ToList();
+                            if (tweets.Count >= NUMBER_OF_RETWEETS)
+                            {
+                                tweetCount = 10;
+                            }
+                            else
+                            {
+                                tweetCount = tweets.Count;
+                            }
+
+
+                            List<TwitterStatus> Sortedtweets = (List<TwitterStatus>)tweets.OrderByDescending(tw => tw.User.FollowersCount).ToList().GetRange(0, tweetCount);
 
                             SetTweetImages(MainCircleURL, Sortedtweets);
                            
@@ -86,7 +97,7 @@ public partial class Result : System.Web.UI.Page
                         {
                             Response.Write("<script>alert('Error Occured Try again');</script>");
                             Session["TweetURL"] = null;
-                            Response.Redirect("Default.aspx");
+                            
                         }
                     }
                 }
@@ -115,24 +126,32 @@ public partial class Result : System.Web.UI.Page
         try
         {
             // Main Circel Images
-            HtmlImage mainCirleHandle = (HtmlImage)this.FindControl("MainCircle");
-            mainCirleHandle.Attributes["src"] = mainCircleURL;
+            HtmlGenericControl mainCirleHandle = new HtmlGenericControl("div");
+            mainCirleHandle.Attributes.Add("class", "main-circle");
 
-            // Child Circle Tweets Profile Images
+            string mainCircleinnerHtml = "<img runat=\"server\" id=\"MainCircle\" src=\" "+ mainCircleURL +"\"/>";
+
+            mainCirleHandle.InnerHtml = mainCircleinnerHtml;
+
+            TwitterCirclePanel.Controls.Add(mainCirleHandle);
+
             int startCount = 1;
+
+            HidTweetCircleCount.Value = sortedRetweets.Count.ToString();
             foreach (TwitterStatus twt in sortedRetweets)
             {
 
-                HtmlImage childCircleHandle = (HtmlImage)this.FindControl(CHILD_CIRLCE_IMGID + startCount);
-                if (childCircleHandle != null)
-                {
-                    childCircleHandle.Attributes["src"] = twt.User.ProfileImageUrl.Replace("_normal", "");
-                    // childCircleHandle.Attributes["child-circle-"+startCount] = startCount.ToString();
+                HtmlGenericControl divChildCircle = new HtmlGenericControl("div");
+                divChildCircle.Attributes.Add("class", "child-item tooltip");
+                divChildCircle.Attributes.Add("id", CHILD_CIRLCE_DIVID + startCount);
+                divChildCircle.Attributes.Add("runat", "server");
+                divChildCircle.Attributes.Add("style", "width: 75px; height:75px; position:absolute; border-radius:50%; background-size: cover; display: block;");
 
-                    HtmlControl childCircleDivHandle = (HtmlControl)this.FindControl(CHILD_CIRLCE_DIVID + startCount);
-                    childCircleDivHandle.Attributes["title"] = startCount.ToString();
-                    startCount++;
-                }
+                string childCircleImg = "<img runat=\"server\" id=\"img" + startCount + "\" src=\"" + twt.User.ProfileImageUrl.Replace("_normal", "") + "\" />";
+                divChildCircle.InnerHtml = childCircleImg;
+                divChildCircle.Attributes["title"] = startCount.ToString();
+                TwitterCirclePanel.Controls.Add(divChildCircle);
+                startCount++;
             }
         }
         catch (Exception exp)

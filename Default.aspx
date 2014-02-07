@@ -65,11 +65,11 @@
     <div id="SampleTweetHandle" class="imageTweetHandler">
     
     <img src="https://pbs.twimg.com/profile_images/426158315781881856/sBsvBbjY.png" id="https://twitter.com/github/status/428654444993994752" />
-    <img src="https://pbs.twimg.com/profile_images/2284174758/v65oai7fxn47qv9nectx.png" id="https://twitter.com/twitter/status/428602381920514048" />
-    <img src="https://pbs.twimg.com/profile_images/79787739/mf-tg-sq.jpg" id="https://twitter.com/martinfowler/status/428547772103421952" />
-    <img src="https://pbs.twimg.com/profile_images/424495004/GuidoAvatar.jpg" id="https://twitter.com/gvanrossum/status/424595747397332992" />
-    <img src="https://pbs.twimg.com/profile_images/378800000091193257/fcb03c8d0a40048f2537df967239686f.jpeg" id="https://twitter.com/spolsky/status/427937968980889600" />
-    <img src="https://pbs.twimg.com/profile_images/378800000324784929/1a4ee3fde80808a96ed268a7fb94682d.png" id="https://twitter.com/firefox/status/429335785393758210" />
+    <img src="http://pbs.twimg.com/profile_images/2556368541/alng5gtlmjhrdlr3qxqv.jpeg" id="https://twitter.com/dhh/status/431806048035696640" />
+    <img src="https://pbs.twimg.com/profile_images/79787739/mf-tg-sq.jpg" id="https://twitter.com/martinfowler/status/431211716811042816" />
+    <img src="https://pbs.twimg.com/profile_images/424495004/GuidoAvatar.jpg" id="https://twitter.com/gvanrossum/status/427650653473615872" />
+    <img src="https://pbs.twimg.com/profile_images/378800000091193257/fcb03c8d0a40048f2537df967239686f.jpeg" id="https://twitter.com/spolsky/status/430431156043935745" />
+    <img src="https://pbs.twimg.com/profile_images/378800000324784929/1a4ee3fde80808a96ed268a7fb94682d.png" id="https://twitter.com/firefox/status/431125106081820672" />
     </div>
     
     <div id="main-Container" style="width:1024px;height:100%">
@@ -78,7 +78,7 @@
             <asp:Label runat="server" id="lblTwitterHandle" Text="Enter a Valid Tweet Handle" style="color:White;font-size:20px;font-weight:bold;font-family:Arial Black"/>
             <input type="text" runat="server" name="txtTwitterHandle" id="txtTwitterHandle" value="https://twitter.com/firefox/status/429335785393758210" style="color:Navy;font-size:25px;background-color:White;height:35px;width:620px;border-color:Silver"/>
             <asp:Button runat="server" id="btnGetTweetCircle" name="btnGetTweetCircle" 
-                Text="Get 9 Pool Tweet Circle" 
+                Text="Get Tweet Circle" 
                 style="color:White;font-size:25px; cursor:pointer; font-weight:bold;margin-left:22%;margin-top:2%;height:45px;width:300px;background-color:#c70606" 
                 OnClientClick="return btnGetTweetClientClik()" 
                 onclick="btnGetTweetCircle_Click" /> 
